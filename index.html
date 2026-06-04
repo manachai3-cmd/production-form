@@ -158,7 +158,7 @@
 
 </div>
 <script>
-var SHEET_URL = "https://script.google.com/macros/s/AKfycby5rdi4RK-hznBREvyJJHF4xQPlA0jeZkqm076BG_EgpAPQaA6lBlrBxWqkTpAcB09N/exec";
+var SHEET_URL = "https://script.google.com/macros/s/AKfycbzXYoYAYN4-9-QMlZyKX8hQMHE-XD0dI5g1dS3664o5lbVbr7e-XxFZPe9lwkMjiatIaQ/exec";
 var SL = { normal:"เริ่ม", stop:"หยุดเปลี่ยนงาน", done:"เสร็จสิ้น", end:"เลิกงาน", ot:"โอที" };
 var IDS = ["normal","stop","done","end","ot"];
 var NEED_QTY = ["stop","done","end","ot"];
@@ -307,26 +307,24 @@ function resetBtn() {
 // โหลดรายชื่อพนักงานจาก Sheet
 function loadNames() {
   var sel = document.getElementById("f-name");
-  var cbName = "cbNames" + Date.now();
-  window[cbName] = function(data) {
-    delete window[cbName];
-    var s = document.getElementById("jsonp-names");
-    if (s) document.body.removeChild(s);
-    sel.innerHTML = '<option value="">-- เลือกชื่อพนักงาน --</option>';
-    if (data.names && data.names.length) {
-      data.names.forEach(function(n) {
-        var opt = document.createElement("option");
-        opt.value = n; opt.textContent = n;
-        sel.appendChild(opt);
-      });
-    } else {
-      sel.innerHTML = '<option value="">-- ไม่พบรายชื่อ --</option>';
-    }
-  };
-  var script = document.createElement("script");
-  script.id = "jsonp-names";
-  script.src = SHEET_URL + "?action=getNames&callback=" + cbName;
-  document.body.appendChild(script);
+  fetch(SHEET_URL + "?action=getNames")
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      sel.innerHTML = '<option value="">-- เลือกชื่อพนักงาน --</option>';
+      if (data.names && data.names.length) {
+        data.names.forEach(function(n) {
+          var opt = document.createElement("option");
+          opt.value = n.trim();
+          opt.textContent = n.trim();
+          sel.appendChild(opt);
+        });
+      } else {
+        sel.innerHTML = '<option value="">-- ไม่พบรายชื่อ --</option>';
+      }
+    })
+    .catch(function() {
+      sel.innerHTML = '<option value="">-- โหลดไม่สำเร็จ --</option>';
+    });
 }
 loadNames();
 
