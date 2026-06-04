@@ -22,17 +22,14 @@
   .card-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
   label.fl{font-size:13px;color:var(--muted);display:block;margin-bottom:5px;}
   label.fl span{color:var(--red);}
-  input[type=text],input[type=number],textarea,select{
-    width:100%;font-size:15px;color:var(--text);background:#fff;
-    border:1px solid var(--border);border-radius:8px;padding:9px 12px;
-    font-family:inherit;transition:border-color .15s;
-  }
+  input[type=text],input[type=number],textarea,select{width:100%;font-size:15px;color:var(--text);background:#fff;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:inherit;transition:border-color .15s;}
   input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue);}
   textarea{resize:vertical;min-height:68px;line-height:1.5;}
   textarea:disabled{background:#f5f5f5;color:#aaa;cursor:not-allowed;border-color:#e0e0e0;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .mt{margin-top:12px;}
-  .status-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;} .st:last-child:nth-child(odd){grid-column:1/-1;}
+  .status-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .st:last-child:nth-child(odd){grid-column:1/-1;}
   .st{border:1.5px solid var(--border);border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);background:#fff;transition:all .15s;user-select:none;display:flex;flex-direction:column;align-items:center;gap:6px;}
   .st .ico{font-size:26px;}
   .st:hover{border-color:#aaa;background:#f9f9f9;}
@@ -41,12 +38,6 @@
   .st.sa{background:var(--amber-light);border-color:var(--amber);color:var(--amber-dark);}
   .st.sb{background:var(--blue-light);border-color:var(--blue);color:var(--blue-dark);}
   .hidden{display:none;}
-  .tgl{position:relative;width:40px;height:22px;flex-shrink:0;}
-  .tgl input{opacity:0;width:0;height:0;}
-  .sldr{position:absolute;inset:0;background:#ccc;border-radius:11px;cursor:pointer;transition:.2s;}
-  .sldr:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
-  input:checked+.sldr{background:var(--blue);}
-  input:checked+.sldr:before{transform:translateX(18px);}
   .qty-row{display:flex;align-items:center;gap:10px;}
   .qty-row input{width:130px;text-align:center;font-size:20px;font-weight:700;padding:10px;}
   .qty-unit{font-size:15px;color:var(--muted);}
@@ -72,15 +63,12 @@
 </head>
 <body>
 <div class="container">
-
   <div class="header">
     <h1>📋 บันทึกสถานะงาน</h1>
     <p id="ts-hdr"></p>
   </div>
 
   <div id="form-view">
-
-    <!-- การ์ด 1: ข้อมูลพนักงาน -->
     <div class="card">
       <div class="card-title">👤 ข้อมูลพนักงาน</div>
       <div class="ts-badge" id="ts-badge">🕐 ...</div>
@@ -102,34 +90,22 @@
       </div>
     </div>
 
-    <!-- การ์ด 2: สถานะ -->
     <div class="card">
       <div class="card-title">📊 สถานะ <span style="color:var(--red)">*</span></div>
       <div class="status-grid">
-        <div class="st" id="st-normal" onclick="pick('normal')">
-          <span class="ico">🟢</span>เริ่ม
-        </div>
-        <div class="st" id="st-stop" onclick="pick('stop')">
-          <span class="ico">🔄</span>หยุดเปลี่ยนงาน
-        </div>
-        <div class="st" id="st-done" onclick="pick('done')">
-          <span class="ico">🏁</span>เสร็จสิ้น
-        </div>
-        <div class="st" id="st-end" onclick="pick('end')">
-          <span class="ico">🌙</span>เลิกงาน
-        </div>
-        <div class="st" id="st-ot" onclick="pick('ot')">
-          <span class="ico">⭐</span>โอที
-        </div>
+        <div class="st" id="st-normal" onclick="pick('normal')"><span class="ico">🟢</span>เริ่ม</div>
+        <div class="st" id="st-stop"   onclick="pick('stop')">  <span class="ico">🔄</span>หยุดเปลี่ยนงาน</div>
+        <div class="st" id="st-done"   onclick="pick('done')">  <span class="ico">🏁</span>เสร็จสิ้น</div>
+        <div class="st" id="st-end"    onclick="pick('end')">   <span class="ico">🌙</span>เลิกงาน</div>
+        <div class="st" id="st-ot"     onclick="pick('ot')">    <span class="ico">⭐</span>โอที</div>
       </div>
     </div>
-    <!-- การ์ด 4: ขั้นตอน -->
+
     <div class="card hidden" id="step-card">
       <div class="card-title">🔢 ขั้นตอน</div>
       <input type="text" id="f-step" placeholder="เช่น ตัด, เชื่อม, ประกอบ, ตรวจสอบ, บรรจุ...">
     </div>
 
-    <!-- การ์ด 5: ยอดผลิต (เฉพาะ หยุด/เสร็จสิ้น) -->
     <div class="card hidden" id="qty-card">
       <div class="card-title">📦 ยอดที่ผลิตได้ <span style="color:var(--red)">*</span></div>
       <div class="qty-row">
@@ -139,10 +115,7 @@
       <div class="qty-hint" id="qty-hint"></div>
     </div>
 
-
-    <button class="submit-btn" id="sub-btn" onclick="submitForm()">
-      ส่งข้อมูล
-    </button>
+    <button class="submit-btn" id="sub-btn" onclick="submitForm()">ส่งข้อมูล</button>
     <div class="err" id="err-msg"></div>
   </div>
 
@@ -155,14 +128,14 @@
     </div>
     <button class="new-btn" onclick="resetForm()">+ บันทึกรายการใหม่</button>
   </div>
-
 </div>
+
 <script>
 var SHEET_URL = "https://script.google.com/macros/s/AKfycbzXYoYAYN4-9-QMlZyKX8hQMHE-XD0dI5g1dS3664o5lbVbr7e-XxFZPe9lwkMjiatIaQ/exec";
-var SL = { normal:"เริ่ม", stop:"หยุดเปลี่ยนงาน", done:"เสร็จสิ้น", end:"เลิกงาน", ot:"โอที" };
-var IDS = ["normal","stop","done","end","ot"];
+var SL       = { normal:"เริ่ม", stop:"หยุดเปลี่ยนงาน", done:"เสร็จสิ้น", end:"เลิกงาน", ot:"โอที" };
+var IDS      = ["normal","stop","done","end","ot"];
 var NEED_QTY = ["stop","done","end","ot"];
-var cur = "";
+var cur      = "";
 
 function updateTime() {
   var s = new Date().toLocaleString("th-TH",{timeZone:"Asia/Bangkok",day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
@@ -178,73 +151,77 @@ function hide(id){ document.getElementById(id).classList.add("hidden"); }
 function pick(id) {
   IDS.forEach(function(s){ document.getElementById("st-"+s).className = "st"; });
   cur = id;
-  var clsMap = { normal:"sg", stop:"sa", done:"sg", end:"sr", ot:"sb" };
-  document.getElementById("st-"+id).classList.add(clsMap[id]);
-
-  // ซ่อนทุก card ที่ toggle ได้
+  var cls = { normal:"sg", stop:"sa", done:"sg", end:"sr", ot:"sb" };
+  document.getElementById("st-"+id).classList.add(cls[id]);
   hide("step-card"); hide("qty-card");
-  document.getElementById("f-step").value  = "";
-  document.getElementById("f-qty").value   = "";
-
-  // ทุกสถานะ → แสดงขั้นตอน
+  document.getElementById("f-step").value = "";
+  document.getElementById("f-qty").value  = "";
   show("step-card");
-  // หยุด/เสร็จสิ้น → แสดงยอดผลิต
   if (NEED_QTY.indexOf(id) !== -1) {
     show("qty-card");
-    document.getElementById("qty-hint").textContent = id === "done"
-      ? "บันทึกยอดรวมเมื่องานเสร็จสิ้น"
-      : id === "end" ? "บันทึกยอดรวมตอนเลิกงาน" : id === "ot" ? "บันทึกยอดที่ผลิตได้ระหว่างโอที" : "บันทึกยอดที่ผลิตได้ก่อนเปลี่ยนงาน";
+    var hints = { stop:"บันทึกยอดที่ผลิตได้ก่อนเปลี่ยนงาน", done:"บันทึกยอดรวมเมื่องานเสร็จสิ้น", end:"บันทึกยอดรวมตอนเลิกงาน", ot:"บันทึกยอดที่ผลิตได้ระหว่างโอที" };
+    document.getElementById("qty-hint").textContent = hints[id] || "";
+  }
+}
+
+function toggleNote(jobVal) {
+  var note = document.getElementById("f-note");
+  if (jobVal.trim() !== "") {
+    note.value = ""; note.disabled = true;
+    note.placeholder = "ไม่สามารถกรอกได้เมื่อมีหมายเลข Job Order";
+  } else {
+    note.disabled = false;
+    note.placeholder = "เช่น เตรียมวัสดุ, ทำความสะอาดเครื่อง, รอคำสั่ง...";
   }
 }
 
 function submitForm() {
-  var name  = document.getElementById("f-name").value.trim();
-  var job   = document.getElementById("f-job").value.trim();
-  var note  = document.getElementById("f-note").value.trim();
-  var step  = document.getElementById("f-step").value.trim();
-  var qty   = document.getElementById("f-qty").value.trim();
+  var name = document.getElementById("f-name").value;
+  var job  = document.getElementById("f-job").value.trim();
+  var note = document.getElementById("f-note").value.trim();
+  var step = document.getElementById("f-step").value.trim();
+  var qty  = document.getElementById("f-qty").value.trim();
 
-  if (!name)                                  { showErr("กรุณากรอกชื่อพนักงาน"); return; }
-  if (!cur)                                   { showErr("กรุณาเลือกสถานะ"); return; }
-  if (NEED_QTY.indexOf(cur) !== -1 && !qty)  { showErr("กรุณากรอกยอดที่ผลิตได้"); return; }
+  if (!name)                                 { showErr("กรุณาเลือกชื่อพนักงาน"); return; }
+  if (!cur)                                  { showErr("กรุณาเลือกสถานะ"); return; }
+  if (NEED_QTY.indexOf(cur) !== -1 && !qty) { showErr("กรุณากรอกยอดที่ผลิตได้"); return; }
 
   document.getElementById("err-msg").style.display = "none";
   var btn = document.getElementById("sub-btn");
   btn.disabled = true;
   btn.innerHTML = '<span class="spin"></span> กำลังส่งข้อมูล...';
 
-  var noteVal    = note || "-";
-  var qtyVal     = NEED_QTY.indexOf(cur) !== -1 ? qty : "-";
-  var recType    = cur === "done" ? "ตอนเสร็จสิ้น" : cur === "end" ? "ตอนเลิกงาน" : cur === "stop" ? "หยุดเปลี่ยนงาน" : cur === "ot" ? "โอที" : "-";
-  var cbName     = "cb" + Date.now();
+  var recType = { normal:"-", stop:"หยุดเปลี่ยนงาน", done:"ตอนเสร็จสิ้น", end:"ตอนเลิกงาน", ot:"โอที" };
+  var qtyVal  = NEED_QTY.indexOf(cur) !== -1 ? qty : "-";
+  var cbName  = "cb" + Date.now();
 
-  var params = "name="       + encodeURIComponent(name)
-             + "&jobOrder="  + encodeURIComponent(job || "-")
-             + "&note="      + encodeURIComponent(noteVal)
-             + "&status="    + encodeURIComponent(SL[cur])
-             + "&step="      + encodeURIComponent(step || "-")
-             + "&recordType="+ encodeURIComponent(recType)
-             + "&qty="       + encodeURIComponent(qtyVal)
-             + "&callback="  + cbName;
+  var params = "name="        + encodeURIComponent(name)
+             + "&jobOrder="   + encodeURIComponent(job  || "-")
+             + "&note="       + encodeURIComponent(note || "-")
+             + "&status="     + encodeURIComponent(SL[cur])
+             + "&step="       + encodeURIComponent(step || "-")
+             + "&recordType=" + encodeURIComponent(recType[cur])
+             + "&qty="        + encodeURIComponent(qtyVal)
+             + "&callback="   + cbName;
 
-  var timedOut = false;
+  var done = false;
   var timer = setTimeout(function(){
-    timedOut = true;
+    done = true;
     showErr("หมดเวลา — ตรวจสอบการ Deploy Apps Script");
     resetBtn();
     delete window[cbName];
     var s = document.getElementById("jsonp-s");
-    if (s) document.body.removeChild(s);
+    if (s) s.parentNode.removeChild(s);
   }, 10000);
 
   window[cbName] = function(data) {
-    if (timedOut) return;
+    if (done) return;
     clearTimeout(timer);
     delete window[cbName];
     var s = document.getElementById("jsonp-s");
-    if (s) document.body.removeChild(s);
+    if (s) s.parentNode.removeChild(s);
     if (data.result === "ok") {
-      showSuccess(name, job||"-", noteVal, SL[cur], step||"-", recType, qtyVal, data.timestamp);
+      showSuccess(name, job||"-", note||"-", SL[cur], step||"-", recType[cur], qtyVal, data.timestamp);
     } else {
       showErr("เกิดข้อผิดพลาด: " + (data.message||""));
       resetBtn();
@@ -261,16 +238,13 @@ function showSuccess(name, job, note, status, step, recType, qty, ts) {
   document.getElementById("form-view").style.display = "none";
   document.getElementById("success-view").style.display = "block";
   var rows = [
-    ["ประทับเวลา",    ts||"-"],
-    ["ชื่อพนักงาน",   name],
-    ["Job Order",      job],
-    ["งานที่ทำ",       note],
-    ["สถานะ",          status],
-    ["ขั้นตอน",        step]
+    ["ประทับเวลา", ts||"-"], ["ชื่อพนักงาน", name],
+    ["Job Order", job], ["งานที่ทำ", note],
+    ["สถานะ", status], ["ขั้นตอน", step]
   ];
   if (NEED_QTY.indexOf(cur) !== -1) {
     rows.push(["ประเภทบันทึก", recType]);
-    rows.push(["ยอดผลิต",      parseInt(qty).toLocaleString() + " ชิ้น"]);
+    rows.push(["ยอดผลิต", parseInt(qty).toLocaleString() + " ชิ้น"]);
   }
   document.getElementById("receipt").innerHTML = rows.map(function(r){
     return '<div class="rr"><span class="rk">'+r[0]+'</span><span class="rv">'+r[1]+'</span></div>';
@@ -279,9 +253,8 @@ function showSuccess(name, job, note, status, step, recType, qty, ts) {
 
 function resetForm() {
   document.getElementById("f-note").disabled = false;
-  ["f-name","f-job","f-note","f-qty","f-step"].forEach(function(id){
-    document.getElementById(id).value = "";
-  });
+  ["f-job","f-note","f-qty","f-step"].forEach(function(id){ document.getElementById(id).value = ""; });
+  document.getElementById("f-name").selectedIndex = 0;
   cur = "";
   IDS.forEach(function(s){ document.getElementById("st-"+s).className = "st"; });
   hide("step-card"); hide("qty-card");
@@ -293,70 +266,45 @@ function resetForm() {
 
 function showErr(msg) {
   var el = document.getElementById("err-msg");
-  el.textContent = "⚠️ " + msg;
-  el.style.display = "block";
+  el.textContent = "⚠️ " + msg; el.style.display = "block";
   resetBtn();
 }
 
 function resetBtn() {
   var btn = document.getElementById("sub-btn");
-  btn.disabled = false;
-  btn.innerHTML = "ส่งข้อมูล";
+  btn.disabled = false; btn.innerHTML = "ส่งข้อมูล";
 }
 
-// โหลดรายชื่อพนักงานจาก Sheet
 function loadNames() {
   var sel = document.getElementById("f-name");
-  fetch(SHEET_URL + "?action=getNames")
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      sel.innerHTML = '<option value="">-- เลือกชื่อพนักงาน --</option>';
-      if (data.names && data.names.length) {
-        data.names.forEach(function(n) {
-          var opt = document.createElement("option");
-          opt.value = n.trim();
-          opt.textContent = n.trim();
-          sel.appendChild(opt);
-        });
-      } else {
-        sel.innerHTML = '<option value="">-- ไม่พบรายชื่อ --</option>';
-      }
-    })
-    .catch(function() {
-      sel.innerHTML = '<option value="">-- โหลดไม่สำเร็จ --</option>';
-    });
+  var cbName = "cbNames" + Date.now();
+  window[cbName] = function(data) {
+    delete window[cbName];
+    var s = document.getElementById("jsonp-names");
+    if (s) s.parentNode.removeChild(s);
+    sel.innerHTML = '<option value="">-- เลือกชื่อพนักงาน --</option>';
+    if (data.names && data.names.length) {
+      data.names.forEach(function(n) {
+        var opt = document.createElement("option");
+        opt.value = n; opt.textContent = n;
+        sel.appendChild(opt);
+      });
+    } else {
+      sel.innerHTML = '<option value="">-- ไม่พบรายชื่อ --</option>';
+    }
+  };
+  setTimeout(function() {
+    if (window[cbName]) {
+      sel.innerHTML = '<option value="">-- โหลดไม่สำเร็จ ลองรีเฟรช --</option>';
+      delete window[cbName];
+    }
+  }, 8000);
+  var script = document.createElement("script");
+  script.id = "jsonp-names";
+  script.src = SHEET_URL + "?action=getNames&callback=" + cbName;
+  document.head.appendChild(script);
 }
 loadNames();
-
-function toggleNote(jobVal) {
-  var note = document.getElementById("f-note");
-  if (jobVal.trim() !== "") {
-    note.value = "";
-    note.disabled = true;
-    note.placeholder = "ไม่สามารถกรอกได้เมื่อมีหมายเลข Job Order";
-  } else {
-    note.disabled = false;
-    note.placeholder = "เช่น เตรียมวัสดุ, ทำความสะอาดเครื่อง, รอคำสั่ง...";
-  }
-}
-
-  else {
-    fields.classList.add("hidden");
-    document.getElementById("ot-start").value = "";
-    document.getElementById("ot-end").value = "";
-    document.getElementById("ot-duration").textContent = "";
-  }
-}
-
-  var start = new Date("2000-01-01T" + s);
-  var end   = new Date("2000-01-01T" + e);
-  if (end < start) end.setDate(end.getDate() + 1);
-  var diff = (end - start) / 60000;
-  var h = Math.floor(diff / 60);
-  var m = diff % 60;
-  el.textContent = "รวม " + h + " ชั่วโมง " + (m > 0 ? m + " นาที" : "");
-}
-
 </script>
 </body>
 </html>
