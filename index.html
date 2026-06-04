@@ -39,7 +39,14 @@
   .st.sg{background:var(--green-light);border-color:var(--green);color:var(--green-dark);}
   .st.sr{background:var(--red-light);border-color:var(--red);color:var(--red-dark);}
   .st.sa{background:var(--amber-light);border-color:var(--amber);color:var(--amber-dark);}
+  .st.sb{background:var(--blue-light);border-color:var(--blue);color:var(--blue-dark);}
   .hidden{display:none;}
+  .tgl{position:relative;width:40px;height:22px;flex-shrink:0;}
+  .tgl input{opacity:0;width:0;height:0;}
+  .sldr{position:absolute;inset:0;background:#ccc;border-radius:11px;cursor:pointer;transition:.2s;}
+  .sldr:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+  input:checked+.sldr{background:var(--blue);}
+  input:checked+.sldr:before{transform:translateX(18px);}
   .qty-row{display:flex;align-items:center;gap:10px;}
   .qty-row input{width:130px;text-align:center;font-size:20px;font-weight:700;padding:10px;}
   .qty-unit{font-size:15px;color:var(--muted);}
@@ -105,14 +112,14 @@
         <div class="st" id="st-stop" onclick="pick('stop')">
           <span class="ico">🔄</span>หยุดเปลี่ยนงาน
         </div>
-        <div class="st" id="st-wait" onclick="pick('wait')">
-          <span class="ico">⏳</span>รอวัสดุ
-        </div>
         <div class="st" id="st-done" onclick="pick('done')">
           <span class="ico">🏁</span>เสร็จสิ้น
         </div>
         <div class="st" id="st-end" onclick="pick('end')">
           <span class="ico">🌙</span>เลิกงาน
+        </div>
+        <div class="st" id="st-ot" onclick="pick('ot')">
+          <span class="ico">⭐</span>โอที
         </div>
       </div>
     </div>
@@ -131,6 +138,7 @@
       </div>
       <div class="qty-hint" id="qty-hint"></div>
     </div>
+
 
     <button class="submit-btn" id="sub-btn" onclick="submitForm()">
       ส่งข้อมูล
@@ -151,9 +159,9 @@
 </div>
 <script>
 var SHEET_URL = "https://script.google.com/macros/s/AKfycby5rdi4RK-hznBREvyJJHF4xQPlA0jeZkqm076BG_EgpAPQaA6lBlrBxWqkTpAcB09N/exec";
-var SL = { normal:"เริ่ม", stop:"หยุดเปลี่ยนงาน", wait:"รอวัสดุ", done:"เสร็จสิ้น", end:"เลิกงาน" };
-var IDS = ["normal","stop","wait","done","end"];
-var NEED_QTY = ["stop","done","end"];
+var SL = { normal:"เริ่ม", stop:"หยุดเปลี่ยนงาน", done:"เสร็จสิ้น", end:"เลิกงาน", ot:"โอที" };
+var IDS = ["normal","stop","done","end","ot"];
+var NEED_QTY = ["stop","done","end","ot"];
 var cur = "";
 
 function updateTime() {
@@ -170,7 +178,7 @@ function hide(id){ document.getElementById(id).classList.add("hidden"); }
 function pick(id) {
   IDS.forEach(function(s){ document.getElementById("st-"+s).className = "st"; });
   cur = id;
-  var clsMap = { normal:"sg", stop:"sa", wait:"sa", done:"sg", end:"sr" };
+  var clsMap = { normal:"sg", stop:"sa", done:"sg", end:"sr", ot:"sb" };
   document.getElementById("st-"+id).classList.add(clsMap[id]);
 
   // ซ่อนทุก card ที่ toggle ได้
@@ -185,7 +193,7 @@ function pick(id) {
     show("qty-card");
     document.getElementById("qty-hint").textContent = id === "done"
       ? "บันทึกยอดรวมเมื่องานเสร็จสิ้น"
-      : id === "end" ? "บันทึกยอดรวมตอนเลิกงาน" : "บันทึกยอดที่ผลิตได้ก่อนเปลี่ยนงาน";
+      : id === "end" ? "บันทึกยอดรวมตอนเลิกงาน" : id === "ot" ? "บันทึกยอดที่ผลิตได้ระหว่างโอที" : "บันทึกยอดที่ผลิตได้ก่อนเปลี่ยนงาน";
   }
 }
 
@@ -207,7 +215,7 @@ function submitForm() {
 
   var noteVal    = note || "-";
   var qtyVal     = NEED_QTY.indexOf(cur) !== -1 ? qty : "-";
-  var recType    = cur === "done" ? "ตอนเสร็จสิ้น" : cur === "end" ? "ตอนเลิกงาน" : cur === "stop" ? "หยุดเปลี่ยนงาน" : "-";
+  var recType    = cur === "done" ? "ตอนเสร็จสิ้น" : cur === "end" ? "ตอนเลิกงาน" : cur === "stop" ? "หยุดเปลี่ยนงาน" : cur === "ot" ? "โอที" : "-";
   var cbName     = "cb" + Date.now();
 
   var params = "name="       + encodeURIComponent(name)
@@ -333,6 +341,24 @@ function toggleNote(jobVal) {
     note.placeholder = "เช่น เตรียมวัสดุ, ทำความสะอาดเครื่อง, รอคำสั่ง...";
   }
 }
+
+  else {
+    fields.classList.add("hidden");
+    document.getElementById("ot-start").value = "";
+    document.getElementById("ot-end").value = "";
+    document.getElementById("ot-duration").textContent = "";
+  }
+}
+
+  var start = new Date("2000-01-01T" + s);
+  var end   = new Date("2000-01-01T" + e);
+  if (end < start) end.setDate(end.getDate() + 1);
+  var diff = (end - start) / 60000;
+  var h = Math.floor(diff / 60);
+  var m = diff % 60;
+  el.textContent = "รวม " + h + " ชั่วโมง " + (m > 0 ? m + " นาที" : "");
+}
+
 </script>
 </body>
 </html>
