@@ -149,6 +149,16 @@ function show(id){ document.getElementById(id).classList.remove("hidden"); }
 function hide(id){ document.getElementById(id).classList.add("hidden"); }
 
 function pick(id) {
+  // เช็คเวลาสำหรับโอที (19:00 - 23:59 เท่านั้น)
+  if (id === "ot") {
+    var now = new Date();
+    var h = parseInt(now.toLocaleString("th-TH",{timeZone:"Asia/Bangkok",hour:"2-digit",hour12:false}));
+    if (h < 19) {
+      alert("⏰ ยังไม่ถึงเวลาโอที\nสามารถเลือกได้เฉพาะเวลา 19:00 - 23:59 น. เท่านั้น");
+      return;
+    }
+  }
+  document.getElementById("err-msg").style.display = "none";
   IDS.forEach(function(s){ document.getElementById("st-"+s).className = "st"; });
   cur = id;
   var cls = { normal:"sg", stop:"sa", done:"sg", end:"sr", ot:"sb" };
